@@ -51,14 +51,14 @@ class Proofreading {
 				$suggestion = $_POST["suggestion"];
 
 				$commentdata = array(
-					'comment_post_ID' => $postid,
-					'comment_author' => $name,
-					'comment_author_email' => $email,
+					'comment_post_ID' => absint( $postid ),
+					'comment_author' => esc_html( $name ),
+					'comment_author_email' => esc_html( $email ),
 					'comment_author_url' => '',
-					'comment_content' => $suggestion,
+					'comment_content' => esc_html( $suggestion ),
 					'comment_type' => 'suggestion',
 					'comment_parent' => 0,
-					'user_id' => $userid,
+					'user_id' => absint( $userid ),
 					'comment_approved' => 'suggested',
 					'comment_status' => 'suggested'
 				);
@@ -92,12 +92,17 @@ class Proofreading {
 		$suggestions = get_comments($args);
 		if( is_array($suggestions) && empty($suggestions) ) {
 			esc_attr_e('No suggestions yet.', 'proofreading');
-		} else {
-			echo '<ul class="suggestion-list">';
-			foreach($suggestions as $suggestion) :
-				echo( '<li>Name: ' . $suggestion->comment_author . '<br />Suggestion: ' . $suggestion->comment_content . '</li>');
-			endforeach;
-			echo '</ul>';
+		} else { ?>
+
+			<ul class="suggestion-list">
+
+			<?php foreach($suggestions as $suggestion) :
+				echo( '<li>' . sprintf( 'Name: %s', esc_html( $suggestion->comment_author ) ) . '<br />' . sprintf( 'Suggestion: %s', esc_html( $suggestion->comment_content ) ) . '</li>');
+			endforeach; ?>
+			
+			</ul>
+
+			<?php
 		}
 	}
 }
